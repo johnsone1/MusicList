@@ -4,6 +4,9 @@ public class MusicRunner
 {
   public static String Clean (String str)
   { 
+    if (str.length() < 2)
+      return str;
+    
     return str.substring(1, str.length()-1).trim();
   }
   
@@ -31,16 +34,29 @@ public class MusicRunner
     while (data != null)
     {
       // You probably will comment this out but for now print out the line so you can see what is there
-      System.out.println(Arrays.toString(data));
+      //System.out.println(Arrays.toString(data));
       
-      int year = Integer.parseInt(Clean(data[3]));
-      double score= Double.parseDouble(Clean(data[4]));
+      int year = 0;
+      double score = 0;
+      
+      try
+      {
+        year = Integer.parseInt(Clean(data[3]));
+        score= Double.parseDouble(Clean(data[4]));
+      }
+      catch (Exception e)
+      {
+        
+      }
       
       // Let's try to create a Song object
      Song song = new Song(Clean(data[0]), Clean(data[1]), year, score, Clean(data[16]));  // data[0] is the artist and data[1] is the name
-      songs.add(song);
       
+     if(Clean(data[2]).equals("song") && song.name.indexOf(" love") != -1)
+     {
+      songs.add(song);
       count++;
+     }
       
       if (count == 10)  
         break;
@@ -49,5 +65,12 @@ public class MusicRunner
     }
     
     mr.close();
+    
+    for (int i = songs.size()-1; i >= 0; i--)
+    {
+      Song song = songs.get(i);
+      
+      System.out.println("\"" + song.name + "\" by " + song.artist);
+    }
   }
 }
